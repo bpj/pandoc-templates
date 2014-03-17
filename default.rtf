@@ -1,21 +1,74 @@
-{\rtf1\ansi\deff0{\fonttbl{\f0 \fswiss Helvetica;}{\f1 Courier;}}
+{\rtf1\ansi\deff0{\fonttbl
+$if(mainfont)$
+{\f0 $mainfont$;}
+$else$
+{\f0 \froman Times;}
+$endif$
+$if(monofont)$
+{\f1 $monofont$;}
+$else$
+{\f1 \fmodern Courier;}
+$endif$
+}
 {\colortbl;\red255\green0\blue0;\red0\green0\blue255;}
-\widowctrl\hyphauto
+\widowctrl\hyphauto\deflang$if(deflang)$$deflang$$else$1024$endif$
+$if(size)$
+\fs$size$ 
+$else$ 
+\fs24
+$endif$
 $for(header-includes)$
 $header-includes$
 $endfor$
-
+$if(header)$
+{\header \pard\plain\ql\f0\fs20
+$if(no-header-author)$
+$else$
+{$for(author)$$author$$sep$, $endfor$: }
+$endif$
+$if(short-title)$
+{\i $short-title$. }
+$else$
 $if(title)$
+{\i $title$. }
+$endif$
+$endif$
+$if(header-version)$
+$if(version)$
+{($if(version-is)$$version-is$$else$Version$endif$ $version$.) }
+$endif$
+$endif$
+$if(header-date)$
+$if(date)$
+{$date$.}
+$endif$
+$endif$
+\par
+}
+$endif$
+$if(no-footer)$
+$else$
+{\footerf \pard\qr\plain\f0 \chpgn \par}
+{\footer \pard\qr\plain\f0 \chpgn \par}
+$endif$
+$if(no-title)$
+$else$
+$if(title)$
+\titlepg
 {\pard \qc \f0 \sa180 \li0 \fi0 \b \fs36 $title$\par}
 $endif$
 $for(author)$
 {\pard \qc \f0 \sa180 \li0 \fi0  $author$\par}
 $endfor$
+$if(version)$
+{\pard \qc \f0 \sa180 \li0 \fi0 $if(version-is)$$version-is$$else$Version$endif$ $version$ \par}
+$endif$
 $if(date)$
 {\pard \qc \f0 \sa180 \li0 \fi0  $date$\par}
 $endif$
 $if(spacer)$
 {\pard \ql \f0 \sa180 \li0 \fi0 \par}
+$endif$
 $endif$
 $if(toc)$
 $toc$

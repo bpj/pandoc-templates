@@ -26,6 +26,13 @@ $endfor$
 $if(math)$
   $math$
 $endif$
+$if(include-header.html)$
+<!-- Included from metadata -->
+$for(include-header.html)$
+$include-header.html$
+
+$endfor$
+$endif$
 $for(header-includes)$
   $header-includes$
 $endfor$
