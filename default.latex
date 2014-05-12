@@ -138,8 +138,11 @@ $endif$
         }
 \urlstyle{same}  % don't use monospace font for urls
 $if(ul-links)$
+% make hyperlinks (not the PDF objects containing them!) underlined.
 % with thanks to Bruno Voisin:
 % <http://tug.org/pipermail/macostex-archives/2005-March/014368.html>
+% Bruno warns that a change in hyperref may break this hack any day!
+% Caveat emptor!
 \usepackage[normalem]{ulem}
 \usepackage{url}
 \usepackage{ifthen}
