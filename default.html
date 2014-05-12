@@ -15,6 +15,15 @@ $endif$
 $if(quotes)$
   <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
 $endif$
+$if(include-css)$
+<style type="text/css">
+<!--
+$for(include-css)$
+$include-css$
+$endfor$
+-->
+</style>
+$endif$
 $if(highlighting-css)$
   <style type="text/css">
 $highlighting-css$
