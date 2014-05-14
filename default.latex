@@ -208,6 +208,7 @@ $if(author)$
 $endif$
 $if(date)$
 \date{$date$}
+$endif$
 $if(include-header.latex)$
 % Included from metadata
 $for(include-header.latex)$
