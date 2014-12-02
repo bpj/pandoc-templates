@@ -32,6 +32,21 @@ $endif$
   \fi
   \defaultfontfeatures{$if(def-feat)$$for(def-feat)$$def-feat$$sep$,$endfor$$else$Mapping=$if(mapping)$$mapping$$else$tex-text$endif$,Scale=MatchLowercase$endif$}
   \newcommand{\euro}{€}
+$if(gentium)$
+\setmathfont[
+    UprightFeatures = { SmallCapsFont = {Gentium Plus Small Caps BPJ} },
+    BoldFont        = {Gentium Plus BPJ},
+    BoldFeatures    = {
+        FakeBold        =   $if(fake-bold)$$fake-bold$$else$1.1$endif$,
+        SmallCapsFont   =   {Gentium Plus Small Caps BPJ}
+    },
+    BoldItalicFont      = {Gentium Plus BPJ Italic},
+    BoldItalicFeatures  = {
+        FakeBold        =   $if(fake-bold)$$fake-bold$$else$1.1$endif$,
+        SmallCapsFont   =   {Gentium Plus Small Caps BPJ Italic}
+    }
+]{Gentium Plus BPJ}
+$else$
 $if(mainfont)$
 $if(fake-bold)$
 $if(template-comments)$
@@ -54,6 +69,7 @@ $else$
 $endif$
 $else$
     \setmainfont$if(main-feat)$[$for(main-feat)$$main-feat$$sep$,$endfor$]$endif${$if(fs)$FreeSerif$else$Charis SIL$endif$}
+$endif$
 $endif$
 $if(sansfont)$
     \setsansfont$if(sans-feat)$[$for(sans-feat)$$sans-feat$$sep$,$endfor$]$endif${$sansfont$}
