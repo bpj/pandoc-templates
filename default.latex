@@ -33,19 +33,23 @@ $endif$
   \defaultfontfeatures{$if(def-feat)$$for(def-feat)$$def-feat$$sep$,$endfor$$else$Mapping=$if(mapping)$$mapping$$else$tex-text$endif$,Scale=MatchLowercase$endif$}
   \newcommand{\euro}{€}
 $if(gentium)$
-\setmathfont[
-    UprightFeatures = { SmallCapsFont = {Gentium Plus Small Caps BPJ} },
-    BoldFont        = {Gentium Plus BPJ},
-    BoldFeatures    = {
-        FakeBold        =   $if(fake-bold)$$fake-bold$$else$1.1$endif$,
-        SmallCapsFont   =   {Gentium Plus Small Caps BPJ}
-    },
-    BoldItalicFont      = {Gentium Plus BPJ Italic},
-    BoldItalicFeatures  = {
-        FakeBold        =   $if(fake-bold)$$fake-bold$$else$1.1$endif$,
-        SmallCapsFont   =   {Gentium Plus Small Caps BPJ Italic}
-    }
-]{Gentium Plus BPJ}
+    \setmainfont[
+        SmallCapsFont = {Gentium Plus Small Caps BPJ},
+        UprightFeatures = { SmallCapsFont = {Gentium Plus Small Caps BPJ} },
+        BoldFont        = {Gentium Plus BPJ},
+        BoldFeatures    = {
+            FakeBold        =   1.1,
+            FakeStretch     =   1.1,
+            SmallCapsFont   =   {Gentium Plus Small Caps BPJ}
+        },
+        ItalicFeatures      = { SmallCapsFont = {Gentium Plus Small Caps BPJ Italic} },
+        BoldItalicFont      = {Gentium Plus BPJ Italic},
+        BoldItalicFeatures  = {
+            FakeBold        =   1.1,
+            FakeStretch     =   1.1,
+            SmallCapsFont   =   {Gentium Plus Small Caps BPJ Italic}
+        }
+    ]{Gentium Plus BPJ}
 $else$
 $if(mainfont)$
 $if(fake-bold)$
