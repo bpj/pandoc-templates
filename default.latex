@@ -92,17 +92,11 @@ $endif$
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
-<<<<<<< HEAD
-\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
-\usepackage[$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$]{geometry}
-||||||| merged common ancestors
-\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
-=======
 \IfFileExists{microtype.sty}{%
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
->>>>>>> upstream/master
+\usepackage[$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$]{geometry}
 $if(geometry)$
 \geometry{$for(geometry)$$geometry$$sep$,$endfor$}
 $endif$
