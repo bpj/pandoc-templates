@@ -35,7 +35,6 @@ $endif$
   \newcommand{\euro}{€}
 $if(gentium)$
     \setmainfont[
-        SmallCapsFont      = {Gentium Plus Small Caps BPJ},
         BoldFont           = {Gentium Plus BPJ},
         BoldFeatures       = { FakeBold = 1.1, FakeStretch = 1.1, },
         BoldItalicFont     = {Gentium Plus BPJ Italic},
