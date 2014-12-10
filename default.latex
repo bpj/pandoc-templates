@@ -27,28 +27,19 @@ $endif$
   \ifxetex
     \usepackage{mathspec}
     \usepackage{xltxtra,xunicode}
+    \usepackage{fontspec}
   \else
     \usepackage{fontspec}
   \fi
-  \defaultfontfeatures{$if(def-feat)$$for(def-feat)$$def-feat$$sep$,$endfor$$else$Mapping=$if(mapping)$$mapping$$else$tex-text$endif$,Scale=MatchLowercase$endif$}
+  \defaultfontfeatures{$if(def-feat)$$for(def-feat)$$def-feat$$sep$,$endfor$$else$$if(no-icu)$$else$Renderer=ICU,$endif$Mapping=$if(mapping)$$mapping$$else$tex-text$endif$,Scale=MatchLowercase$endif$}
   \newcommand{\euro}{€}
 $if(gentium)$
     \setmainfont[
-        SmallCapsFont = {Gentium Plus Small Caps BPJ},
-        UprightFeatures = { SmallCapsFont = {Gentium Plus Small Caps BPJ} },
-        BoldFont        = {Gentium Plus BPJ},
-        BoldFeatures    = {
-            FakeBold        =   1.1,
-            FakeStretch     =   1.1,
-            SmallCapsFont   =   {Gentium Plus Small Caps BPJ}
-        },
-        ItalicFeatures      = { SmallCapsFont = {Gentium Plus Small Caps BPJ Italic} },
-        BoldItalicFont      = {Gentium Plus BPJ Italic},
-        BoldItalicFeatures  = {
-            FakeBold        =   1.1,
-            FakeStretch     =   1.1,
-            SmallCapsFont   =   {Gentium Plus Small Caps BPJ Italic}
-        }
+        SmallCapsFont      = {Gentium Plus Small Caps BPJ},
+        BoldFont           = {Gentium Plus BPJ},
+        BoldFeatures       = { FakeBold = 1.1, FakeStretch = 1.1, },
+        BoldItalicFont     = {Gentium Plus BPJ Italic},
+        BoldItalicFeatures = { FakeBold = 1.1, FakeStretch = 1.1, }
     ]{Gentium Plus BPJ}
 $else$
 $if(mainfont)$
@@ -107,7 +98,7 @@ $endif$
 $if(lang)$
 \ifxetex
   \usepackage{polyglossia}
-  \setmainlanguage{$mainlang$}
+  \setmainlanguage{$lang$}
 \else
   \usepackage[shorthands=off,$lang$]{babel}
 \fi
