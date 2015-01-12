@@ -86,6 +86,9 @@ $endif$
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+$if(a4)$$else$% use PA4 paper size like magazines do 
+% to accomodate both North America and the rest of the world
+% without scaling!$endif$
 \usepackage[$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$]{geometry}
 $if(geometry)$
 \geometry{$for(geometry)$$geometry$$sep$,$endfor$}
