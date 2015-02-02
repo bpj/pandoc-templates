@@ -14,7 +14,6 @@ $if(linestretch)$
 \usepackage{setspace}
 \setstretch{$linestretch$}
 $endif$
-\usepackage{mfirstuc}%
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
@@ -36,11 +35,11 @@ $endif$
   \newcommand{\euro}{€}
 $if(gentium)$
     \setmainfont[
-        BoldFont           = {Gentium Plus BPJ},
+        BoldFont           = {$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$},
         BoldFeatures       = { FakeBold = 1.1, FakeStretch = 1.1, },
-        BoldItalicFont     = {Gentium Plus BPJ Italic},
+        BoldItalicFont     = {$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$ Italic},
         BoldItalicFeatures = { FakeBold = 1.1, FakeStretch = 1.1, }
-    ]{Gentium Plus BPJ}
+    ]{$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$}
 $else$
 $if(mainfont)$
 $if(fake-bold)$
@@ -97,6 +96,37 @@ $endif$
 $if(nextline)$
 \usepackage{enumitem}
 \setlist[description]{style=nextline}
+$endif$
+$if(check_box)$
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{newunicodechar}
+\ifxetex
+    \newfontface\checkboxfont{$if(checkbox-font)$$checkbox-font$$else$FreeSerif$endif$}
+    \newunicodechar{☐}{{\checkboxfont ☐\hspace{3pt}}} % U+2610 BALLOT BOX:'☐'
+    \newunicodechar{☒}{{\checkboxfont ☒\hspace{3pt}}} % U+2612 BALLOT BOX WITH X:'☒'
+    \newunicodechar{☑}{{\checkboxfont ☑\hspace{3pt}}} % U+2611 BALLOT BOX WITH CHECK:'☑'
+\else
+    \newunicodechar{☐}{{\(\square\)\hspace{3pt}}}
+    \newunicodechar{☒}{{\(\boxtimes\)\hspace{3pt}}}
+    \newunicodechar{☑}{{\(\boxtimes\)\hspace{3pt}}}
+\fi
+\newlength{\checkindent}
+\setlength{\checkindent}{\widthof{☒}+$if(check-indent)$$check-indent$$else$6pt$endif$}
+\newlist{checkitemize}{itemize}{4}
+\setlist[checkitemize,1]{
+    label={},
+    leftmargin=31pt,
+    labelindent=0pt,
+    labelwidth=0pt,
+    labelsep=0pt,
+    itemindent=-\checkindent
+}
+\newenvironment{checklist}
+{\let\olditemize\itemize \let\itemize\checkitemize}
+{\let\itemize\olditemize}
+\newcommand{\dochecklist}{\begin{checklist}}
+\newcommand{\donechecklist}{\end{checklist}}
 $endif$
 $if(lang)$
 \ifxetex
@@ -214,29 +244,168 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
 $endif$
 
+
+\usepackage{titling}
+\usepackage{xifthen}
+
+\newcommand{\mKtitlEhooKparA}[1]{%
+    \ifthenelse{\equal{#1}{}}{}{%
+        \begin{center}
+            \noindent{#1}
+        \end{center}%
+    }%
+}
+\newcommand{\subtitle}[1]{%
+    \gdef\thEsubtitlE{#1}}
+\newcommand{\thEsubtitlE}{}
+\renewcommand{\maketitlehookb}{\mKtitlEhooKparA{\large\thEsubtitlE}}
+
+\newcommand{\maintainer}[2][maintainer]{%
+    \gdef\thEmaintainerlabeL{#1}%
+    \gdef\thEmaintaineR{#2}%
+}
+\newcommand{\thEmaintaineR}{}
+\renewcommand{\maketitlehookc}{%
+    \ifthenelse{\equal{\thEmaintaineR}{}}{}{%
+        \mKtitlEhooKparA{{\normalsize\thEmaintainerlabeL:}\\\large\thEmaintaineR}%
+    }%
+}
+
+\newcommand{\version}[2][Version]{%
+    \gdef\thEversionlabeL{#1}%
+    \gdef\thEversioN{#2}%
+}
+\newcommand{\thEversioN}{}
+\newcommand{\firstversion}[2][First version]{%
+    \gdef\thEfirstversionlabeL{#1}%
+    \gdef\thEfirstversioN{#2}%
+}
+\newcommand{\thEfirstversioN}{}
+\renewcommand{\maketitlehookd}{%
+    \ifthenelse{\equal{\thEfirstversioN}{}}{}{%
+        \mKtitlEhooKparA{{\normalsize{\thEversionlabeL:~\thEversioN}}}%
+        \mKtitlEhooKparA{{\normalsize{\thEfirstversionlabeL:~\thEfirstversioN}}}%
+    }%
+}
+
+
 $if(title)$
-\title{$title$$if(subtitle)$\\ {$subtitle$}$endif$}
-$if(author)$
-\author{$for(author)$$if(author.name)$$author.name$$if(author.email)$\\$author.email$$endif$$if(author.web)$\\$author.web$$endif$$if(author.affiliation)$\\$author.affiliation$$endif$$else$$author$$endif$$sep$\and{}$endfor$}
+	\title{$title$}
+	$if(subtitle)$
+		\subtitle{$subtitle$}
+	$endif$
+
+	$if(author)$
+		\author{
+		$for(author)$
+			$if(author.name)$
+				$if(author.role)$
+					{\normasize $author.role$:}\\%
+				$endif$
+				$if(author.title)$
+					{$author.title$~}%
+				$endif$
+				$author.name$
+				$if(author.email)$
+					\\{\normalsize $author.email$}%
+				$endif$
+				$if(author.url)$
+					\\{\normalsize $author.url$}%
+				$endif$
+				$if(author.org)$
+					\\{\normalsize $author.org$}%
+				$endif$
+				$if(author.orgurl)$
+					\\{\normalsize $author.orgurl$}%
+				$endif$
+			$else$$author$$endif$
+            $sep$ \and 
+        $endfor$
+        }%
+    $endif$
+
+	$if(maintainer)$
+    \maintainer$if(maintainer-label)$[$maintainer-label$]$endif${
+		$for(maintainer)$
+			$if(maintainer.name)$
+				$if(maintainer.role)$
+					{\normasize $maintainer.role$:}\\%
+				$endif$
+				$if(maintainer.title)$
+					{$maintainer.title$~}%
+				$endif$
+				$maintainer.name$
+				$if(maintainer.email)$
+					\\{\normalsize $maintainer.email$}%
+				$endif$
+				$if(maintainer.url)$
+					\\{\normalsize $maintainer.url$}%
+				$endif$
+				$if(maintainer.org)$
+					\\{\normalsize $maintainer.org$}%
+				$endif$
+				$if(maintainer.orgurl)$
+					\\{\normalsize $maintainer.orgurl$}%
+				$endif$
+			$else$$maintainer$$endif$
+            $sep$ \\\vspace{0.5em} 
+        $endfor$
+        }%
+    $endif$
+
+    $if(version)$
+        $if(version.current)$
+            \version$if(version.current.label)$[$version.current.label$]$endif${%
+            $if(version.current.number)$
+                {$version.current.number$$if(version.current.date)$,~$endif$}%
+            $endif$
+            $if(version.current.date)$
+                {$version.current.date$}%
+            $endif$
+            }
+        $else$
+            $if(version.number)$
+                \version{$if(version.label)$[$version.label$]$endif$%
+                {$version.number$$if(version.date)$,~$endif$}%
+                $if(version.date)$
+                    {$version.date$}%
+                $endif$
+                }
+            $else$
+                $if(version.date)$
+                    \version$if(version.label)$[$version.label$]$endif${%
+                    {$version.date$}%
+                    }
+                $else$
+                \version{$version$}
+                $endif$
+            $endif$
+        $endif$
+    $endif$
+
+    $if(version.first)$
+        $if(version.first.number)$
+            \firstversion{$if(version.first.label)$[$version.first.label$]$endif$%
+            {$version.first.number$$if(version.first.date)$,~$endif$}%
+            $if(version.first.date)$
+                {$version.first.date$}%
+            $endif$
+            }
+        $else$
+            $if(version.first.date)$
+                \firstversion$if(version.first.label)$[$version.first.label$]$endif${%
+                {$version.first.date$}%
+                }
+            $else$
+            \firstversion{$version.first$}
+            $endif$
+        $endif$
+    $endif$
+
+    \date{$date$}
+
 $endif$
-$if(version)$
-$if(version.current)$
-\date{$if(version.current.date)$$version.current.date$$else$$if(date)$$date$$else$\today$endif$$endif$$if(version.current.number)$,\space{}$if(version.current.prefix)${$version.current.prefix$}$else$version$endif$:\space{}{$version.current.number$}$endif$$if(version.first.date)$\\$if(version.first.prefix)$\makefirstuc{$version.first.prefix$}$else$First\space{}version$endif$:\space{}$if(version.first.number)$$version.first.number$,\space{}$endif$$version.first.date$$else$$if(version.first)$\\First\space{}version:\space{}$version.first$$endif$$endif$}
-$else$
-$if(version.first)$
-\date{$if(version.first.date)$$version.first.date$$if(version.first.prefix)$\space{}{$version.first.prefix$}$else$first\space{}version$endif$$if(version.first.number)$\space{}$version.first.number$$endif$$else$$version.first$$endif$}
-$else$
-$if(version.number)$
-\date{$if(version.date)$$version.date$$else$$if(date)$$date$$else$\today$endif$$endif$,\space{}$if(version.prefix)$$version.prefix$$else$version$endif$\space{}$version.number$}
-$else$
-\date{$if(date)$$date$$else$\today$endif$,\space{}version:\space{}$version$}
-$endif$
-$endif$
-$endif$
-$else$
-\date{$if(date)$\date{$date$}$endif$}
-$endif$
-$endif$
+
 $if(include-header.latex)$
 % Included from metadata
 $for(include-header.latex)$
@@ -254,7 +423,15 @@ $if(title)$
 $endif$
 $if(abstract)$
 \begin{abstract}
+$if(abstract.long)$
+$abstract.long$
+$else$
+$if(abstract.short)$
+$abstract.short$
+$else$
 $abstract$
+$endif$
+$endif$
 \end{abstract}
 $endif$
 
