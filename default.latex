@@ -244,167 +244,77 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
 $endif$
 
+% \usepackage{titling}
+% $if(title)$
+% \title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
+% $endif$
+% $if(author)$
+% \author{$for(author)$$author$$sep$ \and $endfor$}
+% $endif$
+% \date{$date$}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{etoolbox}% defines \robustify
 \usepackage{titling}
-\usepackage{xifthen}
 
-\newcommand{\mKtitlEhooKparA}[1]{%
-    \ifthenelse{\equal{#1}{}}{}{%
-        \begin{center}
-            \noindent{#1}
-        \end{center}%
-    }%
-}
-\newcommand{\subtitle}[1]{%
-    \gdef\thEsubtitlE{#1}}
-\newcommand{\thEsubtitlE}{}
-\renewcommand{\maketitlehookb}{\mKtitlEhooKparA{\large\thEsubtitlE}}
+\newcommand{\normalLine}[1]{\\{\normalsize #1}}
+\robustify{\normalLine}
 
-\newcommand{\maintainer}[2][maintainer]{%
-    \gdef\thEmaintainerlabeL{#1}%
-    \gdef\thEmaintaineR{#2}%
-}
-\newcommand{\thEmaintaineR}{}
-\renewcommand{\maketitlehookc}{%
-    \ifthenelse{\equal{\thEmaintaineR}{}}{}{%
-        \mKtitlEhooKparA{{\normalsize\thEmaintainerlabeL:}\\\large\thEmaintaineR}%
-    }%
-}
+\newcommand{\preversion}{\begin{center}
+    \begin{tabular}{l}\normalsize }
+\newcommand{\postversion}{\end{tabular}\par\end{center}}
 
-\newcommand{\version}[2][Version]{%
-    \gdef\thEversionlabeL{#1}%
-    \gdef\thEversioN{#2}%
-}
-\newcommand{\thEversioN}{}
-\newcommand{\firstversion}[2][First version]{%
-    \gdef\thEfirstversionlabeL{#1}%
-    \gdef\thEfirstversioN{#2}%
-}
-\newcommand{\thEfirstversioN}{}
-\renewcommand{\maketitlehookd}{%
-    \ifthenelse{\equal{\thEfirstversioN}{}}{}{%
-        \mKtitlEhooKparA{{\normalsize{\thEversionlabeL:~\thEversioN}}}%
-        \mKtitlEhooKparA{{\normalsize{\thEfirstversionlabeL:~\thEfirstversioN}}}%
-    }%
-}
+\newcommand{\premaintainer}{\begin{center}
+    \large \lineskip 0.5em%
+    \begin{tabular}[t]{c}}
+\newcommand{\postmaintainer}{\end{tabular}\par\end{center}}
+ 
 
 
 $if(title)$
-	\title{$title$}
-	$if(subtitle)$
-		\subtitle{$subtitle$}
-	$endif$
-
-	$if(author)$
-		\author{
-		$for(author)$
-			$if(author.name)$
-				$if(author.role)$
-					{\normasize $author.role$:}\\%
-				$endif$
-				$if(author.title)$
-					{$author.title$~}%
-				$endif$
-				$author.name$
-				$if(author.email)$
-					\\{\normalsize $author.email$}%
-				$endif$
-				$if(author.url)$
-					\\{\normalsize $author.url$}%
-				$endif$
-				$if(author.org)$
-					\\{\normalsize $author.org$}%
-				$endif$
-				$if(author.orgurl)$
-					\\{\normalsize $author.orgurl$}%
-				$endif$
-			$else$$author$$endif$
-            $sep$ \and 
-        $endfor$
-        }%
-    $endif$
-
-	$if(maintainer)$
-    \maintainer$if(maintainer-label)$[$maintainer-label$]$endif${
-		$for(maintainer)$
-			$if(maintainer.name)$
-				$if(maintainer.role)$
-					{\normasize $maintainer.role$:}\\%
-				$endif$
-				$if(maintainer.title)$
-					{$maintainer.title$~}%
-				$endif$
-				$maintainer.name$
-				$if(maintainer.email)$
-					\\{\normalsize $maintainer.email$}%
-				$endif$
-				$if(maintainer.url)$
-					\\{\normalsize $maintainer.url$}%
-				$endif$
-				$if(maintainer.org)$
-					\\{\normalsize $maintainer.org$}%
-				$endif$
-				$if(maintainer.orgurl)$
-					\\{\normalsize $maintainer.orgurl$}%
-				$endif$
-			$else$$maintainer$$endif$
-            $sep$ \\\vspace{0.5em} 
-        $endfor$
-        }%
-    $endif$
-
-    $if(version)$
-        $if(version.current)$
-            \version$if(version.current.label)$[$version.current.label$]$endif${%
-            $if(version.current.number)$
-                {$version.current.number$$if(version.current.date)$,~$endif$}%
-            $endif$
-            $if(version.current.date)$
-                {$version.current.date$}%
-            $endif$
-            }
-        $else$
-            $if(version.number)$
-                \version{$if(version.label)$[$version.label$]$endif$%
-                {$version.number$$if(version.date)$,~$endif$}%
-                $if(version.date)$
-                    {$version.date$}%
-                $endif$
-                }
-            $else$
-                $if(version.date)$
-                    \version$if(version.label)$[$version.label$]$endif${%
-                    {$version.date$}%
-                    }
-                $else$
-                \version{$version$}
-                $endif$
-            $endif$
-        $endif$
-    $endif$
-
-    $if(version.first)$
-        $if(version.first.number)$
-            \firstversion{$if(version.first.label)$[$version.first.label$]$endif$%
-            {$version.first.number$$if(version.first.date)$,~$endif$}%
-            $if(version.first.date)$
-                {$version.first.date$}%
-            $endif$
-            }
-        $else$
-            $if(version.first.date)$
-                \firstversion$if(version.first.label)$[$version.first.label$]$endif${%
-                {$version.first.date$}%
-                }
-            $else$
-            \firstversion{$version.first$}
-            $endif$
-        $endif$
-    $endif$
-
-    \date{$date$}
-
+\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
 $endif$
+$if(author)$
+\author{$for(author)$$if(author.name)$$author.name$
+        $if(author.role)$\normalLine{$author.role$}
+        $endif$$if(author.email)$\normalLine{$author.email$}
+        $endif$$if(author.url)$\normalLine{$author.url$}
+        $endif$$if(author.org)$\normalLine{$author.org$}
+        $endif$$if(author.org-url)$\normalLine{$author.org-url$}$endif$$else$$author$$endif$$sep$ \and $endfor$}
+$endif$
+
+\renewcommand{\maketitlehookb}{%
+$if(version)$\preversion
+    $if(version.current)$$if(version.current.label)$$version.current.label$$else$Current version:$endif$ $if(version.current.number)$$version.current.number$$endif$$if(version.current.date)$, $version.current.date$$endif$ \\
+    $else$$if(version.number)$$if(version.label)$$version.label$$else$Version$endif$ $if(version.number)$$version.number$$endif$$if(version.date)$, $version.date$$endif$ \\
+    $endif$$endif$$if(version.first)$$if(version.first.label)$$version.first.label$$else$First version:$endif$ $if(version.first.number)$$version.first.number$$endif$$if(version.first.date)$, $version.first.date$$endif$ \\
+    $endif$\postversion$endif$
+$if(maintainer)$\begin{center}
+        {\normalsize $if(author-label)$$author-label$$else$Author:$endif$}
+    \end{center}
+$else$$if(author-label)$\begin{center}
+        {\normalsize $author-label$}
+    \end{center}$endif$$endif$
+}
+
+$if(maintainer)$
+\renewcommand{\maketitlehookc}{%
+    \begin{center}
+        {\normalsize $if(maintainer-label)$$maintainer-label$$else$Maintainer:$endif$}\\
+        {\premaintainer 
+        $for(maintainer)$$if(maintainer.name)$$maintainer.name$
+        $if(maintainer.role)$\normalLine{$maintainer.role$}
+        $endif$$if(maintainer.email)$\normalLine{$maintainer.email$}
+        $endif$$if(maintainer.url)$\normalLine{$maintainer.url$}
+        $endif$$if(maintainer.org)$\normalLine{$maintainer.org$}
+        $endif$$if(maintainer.org-url)$\normalLine{$maintainer.org-url$}$endif$$else$$author$$endif$$sep$ \and $endfor$
+        \postmaintainer}
+    \end{center}
+}
+$endif$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 $if(include-header.latex)$
 % Included from metadata
