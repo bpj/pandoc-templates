@@ -1,8 +1,8 @@
 \documentclass[$if(fontsize)$$fontsize$,$else$12pt,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
-$if(include-top.latex)$
+$if(include-top-latex)$
 % Included from metadata
-$for(include-top.latex)$
-$include-top.latex$
+$for(include-top-latex)$
+$include-top-latex$
 $endfor$
 $endif$
 $if(fontfamily)$
@@ -100,7 +100,18 @@ $endif$
 $if(lang)$
 \ifxetex
   \usepackage{polyglossia}
+$if($mainlang$)$
+  \setmainlanguage$if(mainlang.options)$[$for(mainlang.options)$$mainlang.options$$sep$,$endfor$]$endif${$if(mainlang.name)$$mainlang.name$$else$$mainlang$$endif$}
+$else$
   \setmainlanguage{$lang$}
+$endif$
+$if(setlangs)$
+$for(setlangs)$
+  \setotherlanguage$if(setlangs.options)$[$for(setlangs.options)$$setlangs.options$$sep$,]$endfor${$if($setlangs.lang$$setlangs.lang$$else$$setlangs$$endif$}
+$endfor$
+$else$
+$if(otherlang)$  \setotherlanguages{$for(otherlang)$$otherlang$$sep$,$endfor$}$endif$
+$endif$
 \else
   \usepackage[shorthands=off,$lang$]{babel}
 \fi
@@ -111,9 +122,9 @@ $if(natbib)$
 $endif$
 $if(biblatex)$
 \usepackage{biblatex}
-$if(biblio-files)$
-\bibliography{$biblio-files$}
-$endif$
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
 $endif$
 $if(listings)$
 \usepackage{listings}
@@ -131,7 +142,8 @@ $endif$
 $if(tables)$
 \usepackage{longtable,booktabs}
 $endif$
-\usepackage{graphicx}
+$if(graphics)$
+\usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -140,6 +152,9 @@ $endif$
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+$else$
+\usepackage{graphicx}
+$endif$
 \usepackage[$if(xcolor)$$xcolor$$else$svgnames$endif$]{xcolor}
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
@@ -189,6 +204,7 @@ $if(ul-links)$
    {#3}}}}
 \makeatother
 $endif$
+$endif$
 $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
@@ -204,6 +220,8 @@ $endif$
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 $if(numbersections)$
 \setcounter{secnumdepth}{5}
 $else$
@@ -213,7 +231,6 @@ $if(verbatim-in-note)$
 \VerbatimFootnotes % allows verbatim text in footnotes
 $endif$
 
-% \usepackage{titling}
 % $if(title)$
 % \title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
 % $endif$
@@ -222,7 +239,7 @@ $endif$
 % $endif$
 % \date{$date$}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% MY HACKY FANCY TITLEPAGE STUFF... %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \usepackage{etoolbox}% defines \robustify
 \usepackage{titling}
@@ -282,19 +299,30 @@ $if(maintainer)$
     \end{center}
 }
 $endif$
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% END MY HACKY FANCY TITLEPAGE STUFF... %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-$if(include-header.latex)$
+$if(include-header-latex)$
 % Included from metadata
-$for(include-header.latex)$
-$include-header.latex$
+$for(include-header-latex)$
+$include-header-latex$
 
 $endfor$
 $endif$
 $for(header-includes)$
 $header-includes$
 $endfor$
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
 
 \begin{document}
 $if(title)$
@@ -320,7 +348,7 @@ $include-before$
 $endfor$
 $if(toc)$
 {
-\hypersetup{linkcolor=black}
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
@@ -334,7 +362,7 @@ $endif$
 $body$
 
 $if(natbib)$
-$if(biblio-files)$
+$if(bibliography)$
 $if(biblio-title)$
 $if(book-class)$
 \renewcommand\bibname{$biblio-title$}
@@ -342,7 +370,7 @@ $else$
 \renewcommand\refname{$biblio-title$}
 $endif$
 $endif$
-\bibliography{$biblio-files$}
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 
 $endif$
 $endif$

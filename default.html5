@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+$if(include-top-html5)$
+<!-- Included from metadata -->
+$for(include-top-html5)$
+$include-top-html5$
 $for(author-meta)$
   <meta name="author" content="$author-meta$">
 $endfor$
@@ -16,7 +20,11 @@ $endif$
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 $if(quotes)$
+$if(quotes-style)$
+  <style type="text/css">q { quotes: $quotes-style$; }</style>
+$else$
   <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
+$endif$
 $endif$
 $if(highlighting-css)$
   <style type="text/css">
@@ -24,10 +32,24 @@ $highlighting-css$
   </style>
 $endif$
 $for(css)$
-  <link rel="stylesheet" href="$css$">
+  <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
 $endfor$
+$if(include-css)$
+<style type="text/css">
+$for(include-css)$
+$include-css$
+$endfor$
+</style>
+$endif$
 $if(math)$
   $math$
+$endif$
+$if(include-header-html5)$
+<!-- Included from metadata -->
+$for(include-header-html5)$
+$include-header-html5$
+
+$endfor$
 $endif$
 $for(header-includes)$
   $header-includes$

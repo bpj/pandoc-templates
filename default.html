@@ -4,6 +4,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
+$if(include-top-html)$
+<!-- Included from metadata -->
+$for(include-top-html)$
+$include-top-html$
+
+$endfor$
+$endif$
 $for(author-meta)$
   <meta name="author" content="$author-meta$" />
 $endfor$
@@ -13,16 +20,11 @@ $endif$
   <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
   <style type="text/css">code{white-space: pre;}</style>
 $if(quotes)$
+$if(quotes-style)$
+  <style type="text/css">q { quotes: $quotes-style$; }</style>
+$else$
   <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
 $endif$
-$if(include-css)$
-<style type="text/css">
-<!--
-$for(include-css)$
-$include-css$
-$endfor$
--->
-</style>
 $endif$
 $if(highlighting-css)$
   <style type="text/css">
@@ -32,13 +34,20 @@ $endif$
 $for(css)$
   <link rel="stylesheet" href="$css$" $if(html5)$$else$type="text/css" $endif$/>
 $endfor$
+$if(include-css)$
+<style type="text/css">
+$for(include-css)$
+$include-css$
+$endfor$
+</style>
+$endif$
 $if(math)$
   $math$
 $endif$
-$if(include-header.html)$
+$if(include-header-html)$
 <!-- Included from metadata -->
-$for(include-header.html)$
-$include-header.html$
+$for(include-header-html)$
+$include-header-html$
 
 $endfor$
 $endif$
