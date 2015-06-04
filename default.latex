@@ -97,37 +97,6 @@ $if(nextline)$
 \usepackage{enumitem}
 \setlist[description]{style=nextline}
 $endif$
-$if(check_box)$
-\usepackage{enumitem}
-\usepackage{calc}
-\usepackage{newunicodechar}
-\ifxetex
-    \newfontface\checkboxfont{$if(checkbox-font)$$checkbox-font$$else$FreeSerif$endif$}
-    \newunicodechar{☐}{{\checkboxfont ☐\hspace{3pt}}} % U+2610 BALLOT BOX:'☐'
-    \newunicodechar{☒}{{\checkboxfont ☒\hspace{3pt}}} % U+2612 BALLOT BOX WITH X:'☒'
-    \newunicodechar{☑}{{\checkboxfont ☑\hspace{3pt}}} % U+2611 BALLOT BOX WITH CHECK:'☑'
-\else
-    \newunicodechar{☐}{{\(\square\)\hspace{3pt}}}
-    \newunicodechar{☒}{{\(\boxtimes\)\hspace{3pt}}}
-    \newunicodechar{☑}{{\(\boxtimes\)\hspace{3pt}}}
-\fi
-\newlength{\checkindent}
-\setlength{\checkindent}{\widthof{☒}+$if(check-indent)$$check-indent$$else$6pt$endif$}
-\newlist{checkitemize}{itemize}{4}
-\setlist[checkitemize,1]{
-    label={},
-    leftmargin=31pt,
-    labelindent=0pt,
-    labelwidth=0pt,
-    labelsep=0pt,
-    itemindent=-\checkindent
-}
-\newenvironment{checklist}
-{\let\olditemize\itemize \let\itemize\checkitemize}
-{\let\itemize\olditemize}
-\newcommand{\dochecklist}{\begin{checklist}}
-\newcommand{\donechecklist}{\end{checklist}}
-$endif$
 $if(lang)$
 \ifxetex
   \usepackage{polyglossia}
