@@ -1,48 +1,101 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
-$if(fontfamily)$
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+$for(include-top-latex)$
+$include-top-latex$
+
+$endfor$
+$if(fontfamily)$ % {
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
-$else$
+$else$ % } {
 \usepackage{lmodern}
-$endif$
-$if(linestretch)$
+$endif$ % }
+$if(linestretch)$ % {
 \usepackage{setspace}
 \setstretch{$linestretch$}
-$endif$
+$endif$ % }
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
   \usepackage[utf8]{inputenc}
-$if(euro)$
+$if(euro)$ % {
   \usepackage{eurosym}
-$endif$
+$endif$ % }
 \else % if luatex or xelatex
   \ifxetex
     \usepackage{mathspec}
   \else
     \usepackage{fontspec}
   \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-$if(euro)$
+  \defaultfontfeatures{%
+     $if(def-feat)$$for(def-feat)$$def-feat$$sep$, $endfor$$else$%
+     Renderer=$if(renderer)$$renderer$$else$ICU$endif$,%
+	 $if(font-mapping)$Mapping=$mapping$,$endif$%
+     Scale=$if(font-scale)$$font-scale$$else$MatchLowercase$endif$,%
+     $if(no-ligs)$$else$Ligatures=$if(ligatures)${$for(ligatures)$$ligatures$$sep$, $endfor$}$else$TeX$endif$,$endif$ $endif$}
   \newcommand{\euro}{€}
-$endif$
-$if(mainfont)$
-    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
-$endif$
-$if(sansfont)$
-    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
-$endif$
-$if(monofont)$
-    \setmonofont[Mapping=tex-ansi$if(monofontoptions)$,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$$endif$]{$monofont$}
-$endif$
-$if(mathfont)$
+$if(gentium)$ % {
+    % The Gentium font lacks bold styles
+    \setmainfont[%
+        BoldFont           = {$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$},%
+        BoldItalicFont     = {$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$ Italic},%
+        BoldFeatures       = { FakeBold = 1.5, LetterSpace = 2.0, },%
+        BoldItalicFeatures = { FakeBold = 1.5, LetterSpace = 2.0, }%
+        $for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$%
+    ]{$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$}%
+$else$ % } {
+$if(quivira)$ % {
+    % The Quivira font lacks bold and italic styles
+    \setmainfont[%
+        ItalicFont         = {Quivira},%
+        BoldFont           = {Quivira},%
+        BoldItalicFont     = {Quivira},%
+        BoldFeatures       = { FakeBold=1.5,LetterSpace=4.0                               } ,%
+        ItalicFeatures     = { FakeSlant=0.2,FakeStretch=0.8,LetterSpace=2.0              } ,%
+        BoldItalicFeatures = { FakeSlant=0.2,FakeStretch=0.8,FakeBold=1.5,LetterSpace=6.0 } %
+        $for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$%
+    ]{Quivira}%
+$else$ % } {
+$if(mainfont)$ % {
+$if(fake-bold)$ % {
+$if(template-comments)$ % {
+% BPJ:
+% I only ever need this FakeBold stuff with the Gentium fonts but since
+% it's possible to produce different versions to order with TypeTuner Web
+% <http://scripts.sil.org/ttw/fonts2go.cgi> I made a general mechanism.
+$endif$ % }
+    \setmainfont[%
+        BoldFont            = {$if(fake-bf)$$fake-bf$$else$$mainfont$$endif$},%
+        BoldFeatures        = {FakeBold=$fake-bold$},%
+        BoldItalicFont      = {$if(fake-bi)$$fake-bi$$else$$mainfont$ Italic$endif$},%
+        BoldItalicFeatures  = {FakeBold=$fake-bold$},%
+        $for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$%
+    ]{$mainfont$}%
+$else$ % } {
+    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$]{$mainfont$}
+$endif$ % }
+$else$ % } {
+    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$]{$if(charis)$Charis SIL$else$FreeSerif$endif$}
+$endif$ % }
+$endif$ % }
+$endif$ % }
+$if(sansfont)$ % {
+    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$,$for(sans-feat)$$sans-feat$$sep$,$endfor$]{$sansfont$}
+$else$ % } {
+    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$,$for(sans-feat)$$sans-feat$$sep$,$endfor$]{$if(freeserif)$FreeSans$else$DejaVu Sans$endif$}
+$endif$ % }
+$if(monofont)$ % {
+    \setmonofont[$for(monofontoptions)$$monofontoptions$$sep$,$endfor$,$for(mono-feat)$$mono-feat$$sep$,$endfor$]{$monofont$}
+$else$ % } {
+    \setmonofont[Mapping=tex-ansi,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$,$for(mono-feat)$$mono-feat$$sep$,$endfor$]{$if(lm-mono)$Latin Modern Mono$else$DejaVu Sans Mono$endif$}
+$endif$ % }
+$if(mathfont)$ % {
     \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
-$endif$
-$if(CJKmainfont)$
+$endif$ % }
+$if(CJKmainfont)$ % {
     \usepackage{xeCJK}
     \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
-$endif$
+$endif$ % }
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -51,39 +104,45 @@ $endif$
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-$if(geometry)$
-\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
-$endif$
+\usepackage{geometry}
+$if(a4)$$else$% use PA4 paper size like magazines do  {
+% to accomodate both North America and the rest of the world
+% without scaling!
+$endif$ % }
+\geometry{$if(geometry)$$for(geometry)$$geometry$$sep$,$endfor$,$endif$$if(papersize)$$papersize$paper$else$$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$$endif$}
 \usepackage{hyperref}
-$if(colorlinks)$
+$if(nocolorlinks)$ % {
+$else$ % } {
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
-$endif$
+$endif$ % }
 \hypersetup{unicode=true,
-$if(title-meta)$
+$if(title-meta)$ % {
             pdftitle={$title-meta$},
-$endif$
-$if(author-meta)$
+$endif$ % }
+$if(author-meta)$ % {
             pdfauthor={$author-meta$},
-$endif$
-$if(keywords)$
+$endif$ % }
+$if(keywords)$ % {
             pdfkeywords={$for(keywords)$$keywords$$sep$; $endfor$},
-$endif$
-$if(colorlinks)$
+$endif$ % }
+$if(nocolorlinks)$ % {
+            pdfborder={0 0 0},
+$else$ % } {
             colorlinks=true,
             linkcolor=$if(linkcolor)$$linkcolor$$else$Maroon$endif$,
             citecolor=$if(citecolor)$$citecolor$$else$Blue$endif$,
             urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
-$else$
-            pdfborder={0 0 0},
-$endif$
+            allbordercolors={0 0 0},
+            pdfborderstyle={/S/U/W 1}
+$endif$ % }
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
-$if(lang)$
+$if(lang)$ % {
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
-$if(babel-newcommands)$
+$if(babel-newcommands)$ % {
   $babel-newcommands$
-$endif$
+$endif$ % }
 \else
   \usepackage{polyglossia}
   \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
@@ -91,35 +150,35 @@ $for(polyglossia-otherlangs)$
   \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
 $endfor$
 \fi
-$endif$
-$if(natbib)$
+$endif$ % }
+$if(natbib)$ % {
 \usepackage{natbib}
 \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
-$endif$
-$if(biblatex)$
+$endif$ % }
+$if(biblatex)$ % {
 \usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
 $if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
 $for(bibliography)$
 \addbibresource{$bibliography$}
 $endfor$
-$endif$
-$if(listings)$
+$endif$ % }
+$if(listings)$ % {
 \usepackage{listings}
-$endif$
-$if(lhs)$
+$endif$ % }
+$if(lhs)$ % {
 \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
-$endif$
-$if(highlighting-macros)$
+$endif$ % }
+$if(highlighting-macros)$ % {
 $highlighting-macros$
-$endif$
-$if(verbatim-in-note)$
+$endif$ % }
+$if(verbatim-in-note)$ % {
 \usepackage{fancyvrb}
 \VerbatimFootnotes % allows verbatim text in footnotes
-$endif$
-$if(tables)$
+$endif$ % }
+$if(tables)$ % {
 \usepackage{longtable,booktabs}
-$endif$
-$if(graphics)$
+$endif$ % }
+$if(graphics)$ % {
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -129,35 +188,38 @@ $if(graphics)$
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-$endif$
-$if(links-as-notes)$
+$endif$ % }
+$if(links-as-notes)$ % {
 % Make links footnotes instead of hotlinks:
 \renewcommand{\href}[2]{#2\footnote{\url{#1}}}
-$endif$
-$if(strikeout)$
+$endif$ % }
+$if(baseurl)$ % {
+\hyperbaseurl{$baseurl$}
+$endif$ 
+$if(strikeout)$ % {
 \usepackage[normalem]{ulem}
 % avoid problems with \sout in headers with hyperref:
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
-$endif$
-$if(indent)$
-$else$
+$endif$ % }
+$if(indent)$ % {
+$else$ % } {
 \IfFileExists{parskip.sty}{%
 \usepackage{parskip}
 }{% else
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 }
-$endif$
+$endif$ % }
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-$if(numbersections)$
+$if(numbersections)$ % {
 \setcounter{secnumdepth}{5}
-$else$
+$else$ % } {
 \setcounter{secnumdepth}{0}
-$endif$
-$if(subparagraph)$
-$else$
+$endif$ % }
+$if(subparagraph)$ % {
+$else$ % } {
 % Redefines (sub)paragraphs to behave more like sections
 \ifx\paragraph\undefined\else
 \let\oldparagraph\paragraph
@@ -167,8 +229,8 @@ $else$
 \let\oldsubparagraph\subparagraph
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
-$endif$
-$if(dir)$
+$endif$ % }
+$if(dir)$ % {
 \ifxetex
   % load bidi as late as possible as it modifies e.g. graphicx
   $if(latex-dir-rtl)$
@@ -184,71 +246,71 @@ $if(dir)$
   \newenvironment{RTL}{\beginR}{\endR}
   \newenvironment{LTR}{\beginL}{\endL}
 \fi
-$endif$
+$endif$ % }
 $for(header-includes)$
 $header-includes$
 $endfor$
 
-$if(title)$
+$if(title)$ % {
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
-$endif$
-$if(subtitle)$
+$endif$ % }
+$if(subtitle)$ % {
 \providecommand{\subtitle}[1]{}
 \subtitle{$subtitle$}
-$endif$
-$if(author)$
+$endif$ % }
+$if(author)$ % {
 \author{$for(author)$$author$$sep$ \and $endfor$}
-$endif$
+$endif$ % }
 \date{$date$}
 
 \begin{document}
-$if(title)$
+$if(title)$ % {
 \maketitle
-$endif$
-$if(abstract)$
+$endif$ % }
+$if(abstract)$ % {
 \begin{abstract}
 $abstract$
 \end{abstract}
-$endif$
+$endif$ % }
 
 $for(include-before)$
 $include-before$
 
 $endfor$
-$if(toc)$
+$if(toc)$ % {
 {
-$if(colorlinks)$
+$if(colorlinks)$ % {
 \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
-$endif$
+$endif$ % }
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
-$endif$
-$if(lot)$
+$endif$ % }
+$if(lot)$ % {
 \listoftables
-$endif$
-$if(lof)$
+$endif$ % }
+$if(lof)$ % {
 \listoffigures
-$endif$
+$endif$ % }
 $body$
 
-$if(natbib)$
-$if(bibliography)$
-$if(biblio-title)$
-$if(book-class)$
+$if(natbib)$ % {
+$if(bibliography)$ % {
+$if(biblio-title)$ % {
+$if(book-class)$ % {
 \renewcommand\bibname{$biblio-title$}
-$else$
+$else$ % } {
 \renewcommand\refname{$biblio-title$}
-$endif$
-$endif$
+$endif$ % }
+$endif$ % }
 \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 
-$endif$
-$endif$
-$if(biblatex)$
+$endif$ % }
+$endif$ % }
+$if(biblatex)$ % {
 \printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
 
-$endif$
+$endif$ % }
 $for(include-after)$
 $include-after$
 
