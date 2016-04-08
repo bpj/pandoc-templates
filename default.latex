@@ -129,14 +129,56 @@ $if(nocolorlinks)$ % {
             pdfborder={0 0 0},
 $else$ % } {
             colorlinks=true,
-            linkcolor=$if(linkcolor)$$linkcolor$$else$Maroon$endif$,
-            citecolor=$if(citecolor)$$citecolor$$else$Blue$endif$,
-            urlcolor=$if(urlcolor)$$urlcolor$$else$Blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$$if(no-color-links)$Black$else$Maroon$endif$$endif$,
+            citecolor=$if(citecolor)$$citecolor$$else$$if(no-color-links)$Black$else$Blue$endif$$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$$if(no-color-links)$Black$else$Blue$endif$$endif$,
             allbordercolors={0 0 0},
             pdfborderstyle={/S/U/W 1}
 $endif$ % }
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+$if(template-comments)$ % {
+% BPJ:
+% I have defined two variables no-color-links and no-uline-links 
+% which control whether links/urls are underlined and/or colored:
+% 
+%                     colored     underlined
+% ------------------- ----------- --------------
+%     default         yes         yes
+%     no-color-links  no          yes
+%     no-uline-links  yes         no
+%     both variables  no          no
+%
+$endif$ % }
+$if(no-uline-links)$ % {
+$else$ % } {
+% make hyperlinks (not the PDF objects containing them!) underlined.
+% with thanks to Bruno Voisin:
+% <http://tug.org/pipermail/macostex-archives/2005-March/014368.html>
+% Bruno warns that a change in hyperref may break this hack any day!
+% Caveat emptor!
+\usepackage[normalem]{ulem}
+\usepackage{url}
+\usepackage{ifthen}
+\makeatletter
+\renewcommand{\url@}[1]{\hyper@linkurl{\uline{\Hurl{#1}}}{#1}}
+\renewcommand{\hyper@link@}[4][]
+  {\protected@edef\Hy@tempa{#2}%
+   \ifthenelse{\equal{\Hy@tempa}{\@empty}}
+	 {\hyper@link{#1}{#3}{\uline{#4}}}
+	 {\expandafter\hyper@readexternallink#2\\{#1}{#3}{\uline{#4}}}}
+\renewcommand{\contentsline}[4]
+  {\ifthenelse{\equal{\\#4}{\\}}
+	 {\csname l@#1\endcsname{#2}{#3}}
+	 {\ifthenelse{\boolean{Hy@linktocpage}}
+		{\csname l@#1\endcsname
+		   {{#2}}
+		   {\hyper@linkstart{link}{#4}{\uline{#3}}\hyper@linkend}}
+{\csname l@#1\endcsname
+   {\hyper@linkstart{link}{#4}{\uline{#2}}\hyper@linkend}
+   {#3}}}}
+\makeatother
+$endif$ % }
 $if(lang)$ % {
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
