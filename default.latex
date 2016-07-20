@@ -1,7 +1,9 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
-$for(include-top-latex)$
-$include-top-latex$
-
+$for(latex-header-top)$
+$latex-header-top$
+$endfor$
+$for(code-at.latex.header.start)$
+$code-at.latex.header.start$
 $endfor$
 $if(fontfamily)$ % {
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
@@ -110,6 +112,7 @@ $if(a4)$$else$% use PA4 paper size like magazines do  {
 % without scaling!
 $endif$ % }
 \geometry{$if(geometry)$$for(geometry)$$geometry$$sep$,$endfor$,$endif$$if(papersize)$$papersize$paper$else$$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$$endif$}
+\usepackage[normalem]{ulem}
 \usepackage{hyperref}
 $if(nocolorlinks)$ % {
 $else$ % } {
@@ -292,6 +295,12 @@ $endif$ % }
 $for(header-includes)$
 $header-includes$
 $endfor$
+$for(latex-header)$
+$latex-header$
+$endfor$
+$for(code-at.latex.header.end)$
+$code-at.latex.header.end$
+$endfor$
 
 $if(title)$ % {
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
@@ -320,6 +329,10 @@ $endif$ % }
 
 $for(include-before)$
 $include-before$
+
+$endfor$
+$for(code-at.latex.body.start)$
+$code-at.latex.body.start$
 
 $endfor$
 $if(toc)$ % {
@@ -358,6 +371,10 @@ $if(biblatex)$ % {
 $endif$ % }
 $for(include-after)$
 $include-after$
+
+$endfor$
+$for(code-at.latex.body.end)$
+$code-at.latex.body.end$
 
 $endfor$
 \end{document}
