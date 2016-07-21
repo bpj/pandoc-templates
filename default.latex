@@ -251,8 +251,29 @@ $if(baseurl)$
 $endif$ 
 $if(strikeout)$
 \usepackage[normalem]{ulem}
+% BPJ: Real naughty overloading of Pandoc syntax!
+$if(sout-sc)$
+% Use smallcaps instead of strikeout
+\let\sout\textsc
+$else$
+$if(sout-uline)$
+% Use underline instead of strikeout
+\let\sout\uline
+$else$
+$if(sout-uuline)$
+% Use double underline instead of strikeout
+\let\sout\uuline
+$else$
+$if(sout-dash)$
+% Use dash underline instead of strikeout
+\let\sout\dashuline
+$else$
 % avoid problems with \sout in headers with hyperref:
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+$endif$
+$endif$
+$endif$
+$endif$
 $endif$
 $if(indent)$
 $else$
