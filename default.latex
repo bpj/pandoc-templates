@@ -267,11 +267,10 @@ $else$
 $if(sout-dash)$
 % Use dash underline instead of strikeout
 \let\sout\dashuline
-$else$
+$endif$
+$endif$
 % avoid problems with \sout in headers with hyperref:
 \pdfstringdefDisableCommands{\renewcommand{\sout}{}}
-$endif$
-$endif$
 $endif$
 $endif$
 $endif$
