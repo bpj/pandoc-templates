@@ -287,8 +287,8 @@ $else$
             linkcolor=$if(linkcolor)$$linkcolor$$else$$if(no-color-links)$Black$else$Maroon$endif$$endif$,
             citecolor=$if(citecolor)$$citecolor$$else$$if(no-color-links)$Black$else$Blue$endif$$endif$,
             urlcolor=$if(urlcolor)$$urlcolor$$else$$if(no-color-links)$Black$else$Blue$endif$$endif$,
-            allbordercolors={0 0 0},
-            pdfborderstyle={/S/U/W 1}
+            % allbordercolors={0 0 0},
+            % pdfborderstyle={/S/U/W 1}
 $endif$
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -373,6 +373,8 @@ $if(verbatim-in-note)$
 $endif$
 $if(tables)$
 \usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
 $endif$
 $if(graphics)$
 \usepackage{graphicx,grffile}
@@ -466,6 +468,12 @@ $if(dir)$
   \newenvironment{LTR}{\beginL}{\endL}
 \fi
 $endif$
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 $for(code-at.latex.header.end)$
 $code-at.latex.header.end$
 $endfor$
@@ -487,6 +495,7 @@ $if(author)$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 $endif$
 $if(institute)$
+\providecommand{\institute}[1]{}
 \institute{$for(institute)$$institute$$sep$ \and $endfor$}
 $endif$
 \date{$date$}
