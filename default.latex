@@ -1,13 +1,13 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
-$for(latex-header-top)$
-$latex-header-top$
-$endfor$
 $for(code-at.latex.header.start)$
 $code-at.latex.header.start$
 $endfor$
+$for(latex-header-top)$
+$latex-header-top$
+$endfor$
 $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
-$else${
+$else$
 \usepackage{lmodern}
 $endif$
 $if(linestretch)$
@@ -29,13 +29,18 @@ $endif$
   \else
     \usepackage{fontspec}
   \fi
+$if(euro)$
+  \newcommand{\euro}{€}
+$endif$
   \defaultfontfeatures{%
      $if(def-feat)$$for(def-feat)$$def-feat$$sep$, $endfor$$else$%
      Renderer=$if(renderer)$$renderer$$else$ICU$endif$,%
 	 $if(font-mapping)$Mapping=$mapping$,$endif$%
      Scale=$if(font-scale)$$font-scale$$else$MatchLowercase$endif$,%
      $if(no-ligs)$$else$Ligatures=$if(ligatures)${$for(ligatures)$$ligatures$$sep$, $endfor$}$else$TeX$endif$,$endif$ $endif$}
-  \newcommand{\euro}{€}
+$for(fontfamilies)$
+  \newfontfamily{$fontfamilies.name$}[$fontfamilies.options$]{$fontfamilies.font$}
+$endfor$
 $if(gentium)$
     % The Gentium font lacks bold styles
     \setmainfont[%
@@ -60,12 +65,10 @@ $if(quivira)$
 $else$
 $if(mainfont)$
 $if(fake-bold)$
-$if(template-comments)$
 % BPJ:
 % I only ever need this FakeBold stuff with the Gentium fonts but since
 % it's possible to produce different versions to order with TypeTuner Web
 % <http://scripts.sil.org/ttw/fonts2go.cgi> I made a general mechanism.
-$endif$
     \setmainfont[%
         BoldFont            = {$if(fake-bf)$$fake-bf$$else$$mainfont$$endif$},%
         BoldFeatures        = {FakeBold=$fake-bold$},%
@@ -107,17 +110,158 @@ $endif$
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
 \usepackage{geometry}
-$if(a4)$$else$% use PA4 paper size like magazines do  {
+$if(a4)$$else$% use PA4 paper size like magazines do  
 % to accomodate both North America and the rest of the world
 % without scaling!
 $endif$
 \geometry{$if(geometry)$$for(geometry)$$geometry$$sep$,$endfor$,$endif$$if(papersize)$$papersize$paper$else$$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$$endif$}
 \usepackage[normalem]{ulem}
-\usepackage{hyperref}
 $if(nocolorlinks)$
-$else$
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+$if(highlighting-macros)$
+\usepackage[hyperref,dvipsnames]{xcolor}
 $endif$
+$else$
+\usepackage[hyperref,dvipsnames]{xcolor}
+$endif$
+$if(titlefont)$
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\newcommand{\PDCtitlefontshape}{$if(titlefont.shape)$$titlefont.shape$$else$\normalfont$endif$}
+\newcommand{\PDCtitlefontseries}{$if(titlefont.series)$$titlefont.series$$else$\bfseries$endif$}
+$else$
+$if(titlesec)$
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\newcommand{\PDCtitlefontshape}{\normalfont}
+\newcommand{\PDCtitlefontseries}{\bfseries}
+$endif$
+$endif$
+$if(titlefont)$
+\ifdef{\chapter}{
+    \titleformat{\chapter}[display]{\PDCtitlefontshape\huge\PDCtitlefontseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+}{}
+\titleformat{\section}{\PDCtitlefontshape\Large\PDCtitlefontseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\PDCtitlefontshape\large\PDCtitlefontseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\PDCtitlefontshape\normalsize\PDCtitlefontseries}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]{\PDCtitlefontshape\normalsize\PDCtitlefontseries}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}[runin]{\PDCtitlefontshape\normalsize\PDCtitlefontseries}{\thesubparagraph}{1em}{}
+\titlespacing*{\chapter}{0pt}{50pt}{40pt}
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1em}
+\titlespacing*{\subparagraph}{\parindent}{3.25ex plus 1ex minus .2ex}{1em}
+$endif$
+$if(titlesec)$
+
+% TITLESEC DEFAULT VALUES
+\newcommand{\PDCchaptershape}{display}
+\newcommand{\PDCchapterformat}{\PDCtitlefontshape\huge\PDCtitlefontseries}
+\newcommand{\PDCchapterfontshape}{\PDCtitlefontshape}
+\newcommand{\PDCchapterfontsize}{\huge}
+\newcommand{\PDCchapterfontseries}{\PDCtitlefontseries}
+\newcommand{\PDCchapterlabel}{\chaptertitlename\ \thechapter}
+\newcommand{\PDCchapterlabelsep}{20pt}
+\newcommand{\PDCchapterbeforecode}{\Huge}
+\newcommand{\PDCchapteraftercode}{}
+\newcommand{\PDCchapterleft}{0pt}
+\newcommand{\PDCchapterbeforesep}{50pt}
+\newcommand{\PDCchapteraftersep}{40pt}
+% \newcommand{\PDCchapterrightsep}{}
+
+\newcommand{\PDCsectionshape}{hang}
+\newcommand{\PDCsectionformat}{\PDCtitlefontshape\Large\PDCtitlefontseries}
+\newcommand{\PDCsectionfontshape}{\PDCtitlefontshape}
+\newcommand{\PDCsectionfontsize}{\Large}
+\newcommand{\PDCsectionfontseries}{\PDCtitlefontseries}
+\newcommand{\PDCsectionlabel}{\thesection}
+\newcommand{\PDCsectionlabelsep}{1em}
+\newcommand{\PDCsectionbeforecode}{}
+\newcommand{\PDCsectionaftercode}{}
+\newcommand{\PDCsectionleft}{0pt}
+\newcommand{\PDCsectionbeforesep}{3.5ex plus 1ex minus .2ex}
+\newcommand{\PDCsectionaftersep}{2.3ex plus .2ex}
+% \newcommand{\PDCsectionrightsep}{}
+
+\newcommand{\PDCsubsectionshape}{hang}
+\newcommand{\PDCsubsectionformat}{\PDCtitlefontshape\large\PDCtitlefontseries}
+\newcommand{\PDCsubsectionfontshape}{\PDCtitlefontshape}
+\newcommand{\PDCsubsectionfontsize}{\large}
+\newcommand{\PDCsubsectionfontseries}{\PDCtitlefontseries}
+\newcommand{\PDCsubsectionlabel}{\thesubsection}
+\newcommand{\PDCsubsectionlabelsep}{1em}
+\newcommand{\PDCsubsectionbeforecode}{}
+\newcommand{\PDCsubsectionaftercode}{}
+\newcommand{\PDCsubsectionleft}{0pt}
+\newcommand{\PDCsubsectionbeforesep}{3.25ex plus 1ex minus .2ex}
+\newcommand{\PDCsubsectionaftersep}{1.5ex plus .2ex}
+% \newcommand{\PDCsubsectionrightsep}{}
+
+\newcommand{\PDCsubsubsectionshape}{hang}
+\newcommand{\PDCsubsubsectionformat}{\PDCtitlefontshape\normalsize\PDCtitlefontseries}
+\newcommand{\PDCsubsubsectionfontshape}{\PDCtitlefontshape}
+\newcommand{\PDCsubsubsectionfontsize}{\normalsize}
+\newcommand{\PDCsubsubsectionfontseries}{\PDCtitlefontseries}
+\newcommand{\PDCsubsubsectionlabel}{\thesubsubsection}
+\newcommand{\PDCsubsubsectionlabelsep}{1em}
+\newcommand{\PDCsubsubsectionbeforecode}{}
+\newcommand{\PDCsubsubsectionaftercode}{}
+\newcommand{\PDCsubsubsectionleft}{0pt}
+\newcommand{\PDCsubsubsectionbeforesep}{3.25ex plus 1ex minus .2ex}
+\newcommand{\PDCsubsubsectionaftersep}{1.5ex plus .2ex}
+% \newcommand{\PDCsubsubsectionrightsep}{}
+
+\newcommand{\PDCparagraphshape}{runin} % change this to {hang} to get HTML-like headings!
+\newcommand{\PDCparagraphformat}{\PDCtitlefontshape\normalsize\PDCtitlefontseries}
+\newcommand{\PDCparagraphfontshape}{\PDCtitlefontshape}
+\newcommand{\PDCparagraphfontsize}{\normalsize}
+\newcommand{\PDCparagraphfontseries}{\PDCtitlefontseries}
+\newcommand{\PDCparagraphlabel}{\theparagraph}
+\newcommand{\PDCparagraphlabelsep}{1em}
+\newcommand{\PDCparagraphbeforecode}{}
+\newcommand{\PDCparagraphaftercode}{}
+\newcommand{\PDCparagraphleft}{0pt}
+\newcommand{\PDCparagraphbeforesep}{3.25ex plus 1ex minus .2ex}
+\newcommand{\PDCparagraphaftersep}{1em}
+% \newcommand{\PDCparagraphrightsep}{}
+
+\newcommand{\PDCsubparagraphshape}{runin} % change this to {hang} to get HTML-like headings!
+\newcommand{\PDCsubparagraphformat}{\PDCtitlefontshape\normalsize\PDCtitlefontseries}
+\newcommand{\PDCsubparagraphfontshape}{\PDCtitlefontshape}
+\newcommand{\PDCsubparagraphfontsize}{\normalsize}
+\newcommand{\PDCsubparagraphfontseries}{\PDCtitlefontseries}
+\newcommand{\PDCsubparagraphlabel}{\thesubparagraph}
+\newcommand{\PDCsubparagraphlabelsep}{1em}
+\newcommand{\PDCsubparagraphbeforecode}{}
+\newcommand{\PDCsubparagraphaftercode}{}
+\newcommand{\PDCsubparagraphleft}{\parindent}
+\newcommand{\PDCsubparagraphbeforesep}{3.25ex plus 1ex minus .2ex}
+\newcommand{\PDCsubparagraphaftersep}{1em}
+% \newcommand{\PDCsubparagraphrightsep}{}
+
+$for(titlesec)$
+$if(titlesec.class)$
+\titleclass{\$titlesec.command$}{$titlesec.class$}$if(titlesec.superlevel)$[\$titlesec.superlevel$]$endif$
+$endif$
+\titleformat{\$titlesec.command$} 
+[$if(titlesec.shape)$$titlesec.shape$$else$\PDC$titlesec.command$shape$endif$]
+$if(titlesec.format)${$titlesec.format$}$else${%
+    $if(titlesec.fontshape)$$titlesec.fontshape$$else$\PDC$titlesec.command$fontshape$endif$%
+    $if(titlesec.fontsize)$$titlesec.fontsize$$else$\PDC$titlesec.command$fontsize$endif$%
+    $if(titlesec.fontseries)$$titlesec.fontseries$$else$\PDC$titlesec.command$fontseries$endif$%
+}$endif$
+{$if(titlesec.label)$$titlesec.label$$else$\PDC$titlesec.command$label$endif$}
+{$if(titlesec.labelsep)$$titlesec.labelsep$$else$\PDC$titlesec.command$labelsep$endif$}
+{$if(titlesec.beforecode)$$titlesec.beforecode$$else$\PDC$titlesec.command$beforecode$endif$}
+[$if(titlesec.aftercode)$$titlesec.aftercode$$else$\PDC$titlesec.command$aftercode$endif$]
+\titlespacing*{\$titlesec.command$}
+{$if(titlesec.left)$$titlesec.left$$else$\PDC$titlesec.command$left$endif$}
+{$if(titlesec.beforesep)$$titlesec.beforesep$$else$\PDC$titlesec.command$beforesep$endif$}
+{$if(titlesec.aftersep)$$titlesec.aftersep$$else$\PDC$titlesec.command$aftersep$endif$}
+$if(titlesec.rightsep)$[$titlesec.rightsep$]$endif$
+$endfor$
+$endif$
+\usepackage{hyperref}
 \hypersetup{unicode=true,
 $if(title-meta)$
             pdftitle={$title-meta$},
@@ -168,7 +312,7 @@ $else$
 % <http://tug.org/pipermail/macostex-archives/2005-March/014368.html>
 % Bruno warns that a change in hyperref may break this hack any day!
 % Caveat emptor!
-\usepackage[normalem]{ulem}
+% \usepackage[normalem]{ulem}
 \usepackage{url}
 \usepackage{ifthen}
 \makeatletter
@@ -209,8 +353,7 @@ $if(natbib)$
 \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
 $endif$
 $if(biblatex)$
-\usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
-$if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
 $for(bibliography)$
 \addbibresource{$bibliography$}
 $endfor$
@@ -250,7 +393,7 @@ $if(baseurl)$
 \hyperbaseurl{$baseurl$}
 $endif$ 
 $if(strikeout)$
-\usepackage[normalem]{ulem}
+% \usepackage[normalem]{ulem}
 % BPJ: Real naughty overloading of Pandoc syntax!
 $if(sout-sc)$
 % Use smallcaps instead of strikeout
@@ -287,11 +430,13 @@ $endif$
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 $if(numbersections)$
-\setcounter{secnumdepth}{5}
+\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$
 \setcounter{secnumdepth}{0}
 $endif$
 $if(subparagraph)$
+$else$
+$if(titlesec)$
 $else$
 % Redefines (sub)paragraphs to behave more like sections
 \ifx\paragraph\undefined\else
@@ -302,6 +447,7 @@ $else$
 \let\oldsubparagraph\subparagraph
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
+$endif$
 $endif$
 $if(dir)$
 \ifxetex
@@ -320,14 +466,14 @@ $if(dir)$
   \newenvironment{LTR}{\beginL}{\endL}
 \fi
 $endif$
-$for(header-includes)$
-$header-includes$
+$for(code-at.latex.header.end)$
+$code-at.latex.header.end$
 $endfor$
 $for(latex-header)$
 $latex-header$
 $endfor$
-$for(code-at.latex.header.end)$
-$code-at.latex.header.end$
+$for(header-includes)$
+$header-includes$
 $endfor$
 
 $if(title)$
