@@ -109,6 +109,7 @@ $endif$
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage[hyperref,$if(xcolor)$$for(xcolor)$$xcolor$$sep$,$endfor$$else$dvipsnames$endif$]{xcolor}
 \usepackage{geometry}
 $if(a4)$$else$% use PA4 paper size like magazines do  
 % to accomodate both North America and the rest of the world
@@ -118,10 +119,10 @@ $endif$
 \usepackage[normalem]{ulem}
 $if(nocolorlinks)$
 $if(highlighting-macros)$
-\usepackage[hyperref,dvipsnames]{xcolor}
+% \usepackage[hyperref,dvipsnames]{xcolor}
 $endif$
 $else$
-\usepackage[hyperref,dvipsnames]{xcolor}
+% \usepackage[hyperref,dvipsnames]{xcolor}
 $endif$
 \usepackage{hyperref}
 \hypersetup{unicode=true,
