@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html$if(lang)$ lang="$lang$"$endif$$if(dir)$ dir="$dir$"$endif$>
 <head>
+$for(code-at.html5.header.start)$
+$code-at.html5.header.start$
+$endfor$
+$for(code-at.html.header.start)$
+$code-at.html.header.start$
+$endfor$
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
@@ -32,11 +38,23 @@ $endif$
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
+$for(code-at.html5.header.end)$
+$code-at.html5.header.end$
+$endfor$
+$for(code-at.html.header.end)$
+$code-at.html.header.end$
+$endfor$
 $for(header-includes)$
   $header-includes$
 $endfor$
 </head>
 <body>
+$for(code-at.html5.body.start)$
+$code-at.html5.body.start$
+$endfor$
+$for(code-at.html.body.start)$
+$code-at.html.body.start$
+$endfor$
 $for(include-before)$
 $include-before$
 $endfor$
@@ -60,6 +78,12 @@ $toc$
 </nav>
 $endif$
 $body$
+$for(code-at.html5.body.end)$
+$code-at.html5.body.end$
+$endfor$
+$for(code-at.html.body.end)$
+$code-at.html.body.end$
+$endfor$
 $for(include-after)$
 $include-after$
 $endfor$

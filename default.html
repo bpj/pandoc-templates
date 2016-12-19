@@ -1,6 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"$if(lang)$ lang="$lang$" xml:lang="$lang$"$endif$$if(dir)$ dir="$dir$"$endif$>
 <head>
+$for(code-at.xhtml.header.start)$
+$code-at.xhtml.header.start$
+$endfor$
+$for(code-at.html.header.start)$
+$code-at.html.header.start$
+$endfor$
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
@@ -29,6 +35,12 @@ $endfor$
 $if(math)$
   $math$
 $endif$
+$for(code-at.xhtml.header.end)$
+$code-at.xhtml.header.end$
+$endfor$
+$for(code-at.html.header.end)$
+$code-at.html.header.end$
+$endfor$
 $for(header-includes)$
   $header-includes$
 $endfor$
@@ -36,6 +48,12 @@ $endfor$
 <body>
 $for(include-before)$
 $include-before$
+$endfor$
+$for(code-at.xhtml.body.start)$
+$code-at.xhtml.body.start$
+$endfor$
+$for(code-at.html.body.start)$
+$code-at.html.body.start$
 $endfor$
 $if(title)$
 <div id="$idprefix$header">
@@ -57,6 +75,12 @@ $toc$
 </div>
 $endif$
 $body$
+$for(code-at.xhtml.body.end)$
+$code-at.xhtml.body.end$
+$endfor$
+$for(code-at.html.body.end)$
+$code-at.html.body.end$
+$endfor$
 $for(include-after)$
 $include-after$
 $endfor$

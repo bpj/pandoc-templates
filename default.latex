@@ -239,6 +239,16 @@ $if(tables)$
 % Fix footnotes in tables (requires footnote package)
 \IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
 $endif$
+$if(endnotes)$
+\usepackage{endnotes}
+\IfFileExists{hyperendnotes.sty}{\usepackage{hyperendnotes}}{\errmessage{You need to get hyperendnotes.sty from https://git.io/v1d9B}}
+\let\footnote=\endnote
+\let\footnotemark=\endnotemark
+\let\footnotetext=\endnotetext
+$if(notesname)$
+\renewcommand{\notesname}{$notesname$}
+$endif$
+$endif$
 $if(graphics)$
 \usepackage{graphicx,grffile}
 \makeatletter
@@ -340,14 +350,14 @@ $endif$
 \def\fps@figure{htbp}
 \makeatother
 
+$for(header-includes)$
+$header-includes$
+$endfor$
 $for(code-at.latex.header.end)$
 $code-at.latex.header.end$
 $endfor$
 $for(latex-header)$
 $latex-header$
-$endfor$
-$for(header-includes)$
-$header-includes$
 $endfor$
 
 $if(title)$
@@ -400,6 +410,20 @@ $if(lof)$
 \listoffigures
 $endif$
 $body$
+
+$if(endnotes)$
+\IfFileExists{\jobname.ent}{
+\newpage
+\begingroup
+\parindent 0pt
+\parskip 2ex
+$if(endnotesize)$
+\def\enotesize{$endnotesize$}
+$endif$
+\theendnotes
+\endgroup
+}{}
+$endif$
 
 $if(natbib)$
 $if(bibliography)$
