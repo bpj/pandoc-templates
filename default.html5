@@ -73,6 +73,9 @@ $endif$
 </header>
 $endif$
 $if(toc)$
+$if(toc-title)$
+<h1>$toc-title$</h1>
+$endif$
 <nav id="$idprefix$TOC">
 $toc$
 </nav>

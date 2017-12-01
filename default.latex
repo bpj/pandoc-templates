@@ -1,9 +1,23 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+$if(header-include-files.latex.start)$
+$for(header-include-files.latex.start)$
+\input{$header-include-files.latex.start$}
+$endfor$
+$endif$
+
 $for(code-at.latex.header.start)$
 $code-at.latex.header.start$
 $endfor$
 $for(latex-header-top)$
 $latex-header-top$
+$endfor$
+\usepackage{titling}
+\usepackage{relsize}
+$for(usepackages)$
+\usepackage$if(usepackages.options)$[$for(usepackages.options)$$usepackages.options$$sep$,$endfor$]$endif${$if(usepackages.name)$$usepackages.name$$else$$usepackages$$endif$}
+$for(usepackages.extra)$
+$usepackages.extra$
+$endfor$
 $endfor$
 $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
@@ -41,58 +55,50 @@ $endif$
 $for(fontfamilies)$
   \newfontfamily{$fontfamilies.name$}[$fontfamilies.options$]{$fontfamilies.font$}
 $endfor$
-$if(gentium)$
-    % The Gentium font lacks bold styles
-    \setmainfont[%
-        BoldFont           = {$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$},%
-        BoldItalicFont     = {$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$ Italic},%
-        BoldFeatures       = { FakeBold = 1.5, LetterSpace = 2.0, },%
-        BoldItalicFeatures = { FakeBold = 1.5, LetterSpace = 2.0, }%
-        $for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$%
-    ]{$if(gentium-font)$$gentium-font$$else$Gentium Plus$endif$}%
-$else$
-$if(quivira)$
-    % The Quivira font lacks bold and italic styles
-    \setmainfont[%
-        ItalicFont         = {Quivira},%
-        BoldFont           = {Quivira},%
-        BoldItalicFont     = {Quivira},%
-        BoldFeatures       = { FakeBold=1.5,LetterSpace=4.0                               } ,%
-        ItalicFeatures     = { FakeSlant=0.2,FakeStretch=0.8,LetterSpace=2.0              } ,%
-        BoldItalicFeatures = { FakeSlant=0.2,FakeStretch=0.8,FakeBold=1.5,LetterSpace=6.0 } %
-        $for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$%
-    ]{Quivira}%
-$else$
-$if(mainfont)$
-$if(fake-bold)$
-% BPJ:
-% I only ever need this FakeBold stuff with the Gentium fonts but since
-% it's possible to produce different versions to order with TypeTuner Web
-% <http://scripts.sil.org/ttw/fonts2go.cgi> I made a general mechanism.
-    \setmainfont[%
-        BoldFont            = {$if(fake-bf)$$fake-bf$$else$$mainfont$$endif$},%
-        BoldFeatures        = {FakeBold=$fake-bold$},%
-        BoldItalicFont      = {$if(fake-bi)$$fake-bi$$else$$mainfont$ Italic$endif$},%
-        BoldItalicFeatures  = {FakeBold=$fake-bold$},%
-        $for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$%
-    ]{$mainfont$}%
-$else$
-    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$]{$mainfont$}
+$for(font-families)$
+\newfontfamily{\$if(font-families.font)$$font-families.font$$else$$font-families.id$font$endif$}{$if(font-families.name)$$font-families.name$$else$$font-families.id$$endif$}%
+    [$for(font-families.options)$$font-families.options$$sep$,$endfor$]
+$if(font-families.id)$
+\newcommand{\text$font-families.id$}[1]{\$if(font-families.font)$$font-families.font$$else$$font-families.id$font$endif$ #1}
 $endif$
+$endfor$
+$for(font-faces)$
+\newfontface{\$if(font-faces.font)$$font-faces.font$$else$$font-faces.id$font$endif$}{$if(font-faces.name)$$font-faces.name$$else$$font-faces.id$$endif$}%
+    [$for(font-faces.options)$$font-faces.options$$sep$,$endfor$]
+$if(font-faces.id)$
+\newcommand{\text$font-faces.id$}[1]{\$if(font-faces.font)$$font-faces.font$$else$$font-faces.id$font$endif$ #1}
+$endif$
+$endfor$
+$if(mainfont.font)$
+\setmainfont{$mainfont.font$}%
+    [$for(mainfont.options)$$mainfont.options$$sep$,$endfor$]
 $else$
-    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$]{$if(charis)$Charis SIL$else$FreeSerif$endif$}
+\setmainfont{$if(mainfont)$$mainfont$$else$$if(charis)$Charis SIL$else$FreeSerif$endif$$endif$}%
+    [$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$,$for(main-feat)$$main-feat$$sep$,$endfor$]
 $endif$
-$endif$
-$endif$
+$if(sansfont.font)$
+    \setsansfont{$sansfont.font$}%
+    [$for(sansfont.options)$$sansfont.options$$sep$,$endfor$]
+$else$
 $if(sansfont)$
-    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$,$for(sans-feat)$$sans-feat$$sep$,$endfor$]{$sansfont$}
+    \setsansfont{$sansfont$}%
+    [$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$,$for(sans-feat)$$sans-feat$$sep$,$endfor$]
 $else$
-    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$,$for(sans-feat)$$sans-feat$$sep$,$endfor$]{$if(freeserif)$FreeSans$else$DejaVu Sans$endif$}
+    \setsansfont{$if(freefont)$FreeSans$else$DejaVu Sans$endif$}%
+    [$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$,$for(sans-feat)$$sans-feat$$sep$,$endfor$]
 $endif$
-$if(monofont)$
-    \setmonofont[$for(monofontoptions)$$monofontoptions$$sep$,$endfor$,$for(mono-feat)$$mono-feat$$sep$,$endfor$]{$monofont$}
+$endif$
+$if(monofont.font)$
+    \setmonofont{$monofont.font$}%
+    [$for(monofont.options)$$monofont.options$$sep$,$endfor$]
 $else$
-    \setmonofont[Mapping=tex-ansi,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$,$for(mono-feat)$$mono-feat$$sep$,$endfor$]{$if(lm-mono)$Latin Modern Mono$else$DejaVu Sans Mono$endif$}
+$if(monofont)$
+    \setmonofont{$monofont$}%
+    [$for(monofontoptions)$$monofontoptions$$sep$,$endfor$,$for(mono-feat)$$mono-feat$$sep$,$endfor$]
+$else$
+    \setmonofont{$if(lm-mono)$Latin Modern Mono$else$DejaVu Sans Mono$endif$}%
+    [Mapping=tex-ansi,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$,$for(mono-feat)$$mono-feat$$sep$,$endfor$]
+$endif$
 $endif$
 $if(mathfont)$
     \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
@@ -101,6 +107,7 @@ $if(CJKmainfont)$
     \usepackage{xeCJK}
     \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
 $endif$
+\newcommand\textusc[1]{{\addfontfeature{Letters=UppercaseSmallCaps}#1}}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -209,6 +216,11 @@ $endif$
 $for(polyglossia-otherlangs)$
   \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
 $endfor$
+$for(lang-fonts)$
+\newfontfamily\$lang-fonts.lang$font{$lang-fonts.font$}%
+[$if(lang-fonts.language)$Language=$lang-fonts.language$,$endif$$if(lang-fonts.script)$Script=$lang-fonts.script$,$endif$%
+$if(lang-fonts.options)$$for(lang-fonts.options)$$lang-fonts.options$$sep$,$endfor$$else$Scale=MatchLowercase$endif$]
+$endfor$
 \fi
 $endif$
 $if(natbib)$
@@ -237,7 +249,7 @@ $endif$
 $if(tables)$
 \usepackage{longtable,booktabs}
 % Fix footnotes in tables (requires footnote package)
-\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
 $endif$
 $if(endnotes)$
 \usepackage{endnotes}
@@ -350,48 +362,109 @@ $endif$
 \def\fps@figure{htbp}
 \makeatother
 
+$if(droptitle)$
+\setlength{\droptitle}{$droptitle$}
+$endif$
+
+\renewcommand{\maketitlehookb}{%
+\begin{center}
+$if(subtitle)$%
+\par\noindent $subtitle$$if(thanks)$\thanks{$thanks$}$endif$%
+$endif$%
+$if(version)$%
+\par\noindent Version $version$%
+$endif$%
+$for(internet)$%
+\par\noindent $internet$%
+$endfor$%
+\end{center}
+}
+
+\renewcommand{\maketitlehookc}{%
+\begin{center}
+$if(institute)$%
+\par\noindent $institute$%
+$endif$%
+\end{center}
+}
+
+
+$if(header-include-files.latex.end)$
+$for(header-include-files.latex.end)$
+\input{$header-include-files.latex.end$}
+$endfor$
+$else$
+$if(header-include-files.latex.start)$
+$else$
+$for(header-include-files.latex)$
+\input{$header-include-files.latex$}
+$endfor$
+$endif$
+$endif$
+
 $for(header-includes)$
 $header-includes$
+
 $endfor$
-$for(code-at.latex.header.end)$
-$code-at.latex.header.end$
+$for(latex-header-end-files)$
+\input{$latex-header-end-files$}
+
+$endfor$
+$for(latex-header-end-code)$
+$latex-header-end-code$
+
 $endfor$
 $for(latex-header)$
 $latex-header$
+
 $endfor$
 
+
 $if(title)$
-\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
-$endif$
-$if(subtitle)$
-\providecommand{\subtitle}[1]{}
-\subtitle{$subtitle$}
+\title{$title$$if(subtitle)$$else$$if(thanks)$\thanks{$thanks$}$endif$$endif$}
 $endif$
 $if(author)$
-\author{$for(author)$$author$$sep$ \and $endfor$}
+\author{$for(author)$$if(author.name)$$author.name$$if(author.email)$ \\ \textsmaller[2]{$author.email$}$endif$$if(author.institute)$ \\ \textsmaller{$author.institute$}$endif$$else$$author$$endif$$sep$ \\[1em] $endfor$}
 $endif$
-$if(institute)$
-\providecommand{\institute}[1]{}
-\institute{$for(institute)$$institute$$sep$ \and $endfor$}
-$endif$
+
+$if(date)$
 \date{$date$}
+$else$
+\date{\today}
+$endif$
 
 \begin{document}
 $if(title)$
+$if(titlepage)$
+\begin{titlingpage}
+$endif$
 \maketitle
 $endif$
+$if(long-abstract)$
+\begin{abstract}
+$long-abstract$
+\end{abstract}
+$else$
 $if(abstract)$
 \begin{abstract}
 $abstract$
 \end{abstract}
+$endif$
+$if(titlepage)$
+\end{titlingpage}
+$endif$
 $endif$
 
 $for(include-before)$
 $include-before$
 
 $endfor$
-$for(code-at.latex.body.start)$
-$code-at.latex.body.start$
+$for(latex-body-start-files)$
+\input{$latex-body-start-files$}
+
+$endfor$
+$for(latex-body-start-code)$
+$latex-body-start-code$
 
 $endfor$
 $if(toc)$
@@ -446,8 +519,12 @@ $for(include-after)$
 $include-after$
 
 $endfor$
-$for(code-at.latex.body.end)$
-$code-at.latex.body.end$
+$for(latex-body-end-files)$
+\input{$latex-body-end-files$}
+
+$endfor$
+$for(latex-body-end-code)$
+$latex-body-end-code$
 
 $endfor$
 \end{document}
