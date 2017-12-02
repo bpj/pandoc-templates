@@ -1,10 +1,19 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
-$if(header-include-files.latex.start)$
-$for(header-include-files.latex.start)$
-\input{$header-include-files.latex.start$}
-$endfor$
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+$if(colorlinks)$
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 $endif$
-
+%
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+$if(beamer)$
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+$endif$
+$if(beamerarticle)$
+\usepackage{beamerarticle} % needs to be loaded first
+$endif$
 $for(code-at.latex.header.start)$
 $code-at.latex.header.start$
 $endfor$
@@ -34,17 +43,16 @@ $endif$
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
   \usepackage[utf8]{inputenc}
-$if(euro)$
-  \usepackage{eurosym}
-$endif$
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
+$if(mathspec)$
   \ifxetex
     \usepackage{mathspec}
   \else
-    \usepackage{fontspec}
+    \usepackage{unicode-math}
   \fi
-$if(euro)$
-  \newcommand{\euro}{€}
+$else$
+  \usepackage{unicode-math}
 $endif$
   \defaultfontfeatures{%
      $if(def-feat)$$for(def-feat)$$def-feat$$sep$, $endfor$$else$%
@@ -101,38 +109,78 @@ $else$
 $endif$
 $endif$
 $if(mathfont)$
+$if(mathspec)$
+  \ifxetex
     \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \else
+    \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+  \fi
+$else$
+  \setmathfont[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+$endif$
 $endif$
 $if(CJKmainfont)$
+  \ifxetex
     \usepackage{xeCJK}
     \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  \fi
+$endif$
+$if(luatexjapresetoptions)$
+  \ifluatex
+    \usepackage[$for(luatexjapresetoptions)$$luatexjapresetoptions$$sep$,$endfor$]{luatexja-preset}
+  \fi
+$endif$
+$if(CJKmainfont)$
+  \ifluatex
+    \usepackage[$for(luatexjafontspecoptions)$$luatexjafontspecoptions$$sep$,$endfor$]{luatexja-fontspec}
+    \setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+  \fi
 $endif$
 \newcommand\textusc[1]{{\addfontfeature{Letters=UppercaseSmallCaps}#1}}
 \fi
+$if(beamer)$
+$if(theme)$
+\usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+$endif$
+$if(colortheme)$
+\usecolortheme{$colortheme$}
+$endif$
+$if(fonttheme)$
+\usefonttheme{$fonttheme$}
+$endif$
+$if(mainfont)$
+\usefonttheme{serif} % use mainfont rather than sansfont for slide text
+$endif$
+$if(innertheme)$
+\useinnertheme{$innertheme$}
+$endif$
+$if(outertheme)$
+\useoutertheme{$outertheme$}
+$endif$
+$endif$
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage[hyperref,$if(xcolor)$$for(xcolor)$$xcolor$$sep$,$endfor$$else$dvipsnames$endif$]{xcolor}
-\usepackage{geometry}
-$if(a4)$$else$% use PA4 paper size like magazines do  
-% to accomodate both North America and the rest of the world
-% without scaling!
-$endif$
-\geometry{$if(geometry)$$for(geometry)$$geometry$$sep$,$endfor$,$endif$$if(papersize)$$papersize$paper$else$$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$$endif$}
-\usepackage[normalem]{ulem}
-$if(nocolorlinks)$
-$if(highlighting-macros)$
-% \usepackage[hyperref,dvipsnames]{xcolor}
-$endif$
+$if(indent)$
 $else$
-% \usepackage[hyperref,dvipsnames]{xcolor}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 $endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+\usepackage[$if(xcolor)$$for(xcolor)$$xcolor$$sep$,$endfor$$endif$]{xcolor}
+\usepackage[normalem]{ulem}
 \usepackage{hyperref}
-\hypersetup{unicode=true,
+\hypersetup{
 $if(title-meta)$
             pdftitle={$title-meta$},
 $endif$
@@ -140,7 +188,7 @@ $if(author-meta)$
             pdfauthor={$author-meta$},
 $endif$
 $if(keywords)$
-            pdfkeywords={$for(keywords)$$keywords$$sep$; $endfor$},
+            pdfkeywords={$for(keywords)$$keywords$$sep$, $endfor$},
 $endif$
 $if(bookmarksdepth)$
             bookmarks=true,
@@ -162,6 +210,14 @@ $else$
 $endif$
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+\usepackage{geometry}
+$if(a4)$$else$% use PA4 paper size like magazines do  
+% to accomodate both North America and the rest of the world
+% without scaling!
+\geometry{$if(geometry)$$for(geometry)$$geometry$$sep$,$endfor$,$endif$$if(papersize)$$papersize$paper$else$$if(a4)$a4paper$else$papersize={210mm,280mm}$endif$$endif$}
 $if(template-comments)$
 % BPJ:
 % I have defined two variables no-color-links and no-uline-links 
@@ -204,34 +260,8 @@ $else$
    {#3}}}}
 \makeatother
 $endif$
-$if(lang)$
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
-$if(babel-newcommands)$
-  $babel-newcommands$
-$endif$
-\else
-  \usepackage{polyglossia}
-  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
-$for(polyglossia-otherlangs)$
-  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
-$endfor$
-$for(lang-fonts)$
-\newfontfamily\$lang-fonts.lang$font{$lang-fonts.font$}%
-[$if(lang-fonts.language)$Language=$lang-fonts.language$,$endif$$if(lang-fonts.script)$Script=$lang-fonts.script$,$endif$%
-$if(lang-fonts.options)$$for(lang-fonts.options)$$lang-fonts.options$$sep$,$endfor$$else$Scale=MatchLowercase$endif$]
-$endfor$
-\fi
-$endif$
-$if(natbib)$
-\usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
-$endif$
-$if(biblatex)$
-\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
-$for(bibliography)$
-\addbibresource{$bibliography$}
-$endfor$
+$if(beamer)$
+\newif\ifbibliography
 $endif$
 $if(listings)$
 \usepackage{listings}
@@ -242,12 +272,15 @@ $endif$
 $if(highlighting-macros)$
 $highlighting-macros$
 $endif$
-$if(verbatim-in-note)$
-\usepackage{fancyvrb}
-\VerbatimFootnotes % allows verbatim text in footnotes
-$endif$
 $if(tables)$
 \usepackage{longtable,booktabs}
+$if(beamer)$
+\usepackage{caption}
+% These lines are needed to make table captions work with longtable:
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+$else$
 % Fix footnotes in tables (requires footnote package)
 \IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
 $endif$
@@ -271,6 +304,31 @@ $if(graphics)$
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+$endif$
+$if(beamer)$
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+$if(section-titles)$
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \let\insertsectionnumber\relax
+    \let\sectionname\relax
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+$endif$
 $endif$
 $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
@@ -304,15 +362,6 @@ $endif$
 $endif$
 $endif$
 $endif$
-$if(indent)$
-$else$
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-$endif$
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -321,6 +370,8 @@ $if(numbersections)$
 $else$
 \setcounter{secnumdepth}{0}
 $endif$
+$if(beamer)$
+$else$
 $if(subparagraph)$
 $else$
 $if(pandoc-titlesec-filter-code)$
@@ -336,8 +387,38 @@ $else$
 \fi
 $endif$
 $endif$
+$endif$
 $if(pandoc-titlesec-filter-code)$
 $pandoc-titlesec-filter-code$
+$endif$
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+$if(lang)$
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
+$if(babel-newcommands)$
+  $babel-newcommands$
+$endif$
+\else
+    $for(lang-fonts)$
+    \newfontfamily\$lang-fonts.lang$font{$lang-fonts.font$}%
+    [$if(lang-fonts.language)$Language=$lang-fonts.language$,$endif$$if(lang-fonts.script)$Script=$lang-fonts.script$,$endif$%
+    $if(lang-fonts.options)$$for(lang-fonts.options)$$lang-fonts.options$$sep$,$endfor$$else$Scale=MatchLowercase$endif$]
+    $endfor$
+  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
+$for(polyglossia-otherlangs)$
+  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
+$endfor$
+\fi
 $endif$
 $if(dir)$
 \ifxetex
@@ -356,11 +437,16 @@ $if(dir)$
   \newenvironment{LTR}{\beginL}{\endL}
 \fi
 $endif$
-
-% set default figure placement to htbp
-\makeatletter
-\def\fps@figure{htbp}
-\makeatother
+$if(natbib)$
+\usepackage[$natbiboptions$]{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
 
 $if(droptitle)$
 \setlength{\droptitle}{$droptitle$}
@@ -402,10 +488,6 @@ $endfor$
 $endif$
 $endif$
 
-$for(header-includes)$
-$header-includes$
-
-$endfor$
 $for(latex-header-end-files)$
 \input{$latex-header-end-files$}
 
@@ -427,18 +509,35 @@ $if(author)$
 \author{$for(author)$$if(author.name)$$author.name$$if(author.email)$ \\ \textsmaller[2]{$author.email$}$endif$$if(author.institute)$ \\ \textsmaller{$author.institute$}$endif$$else$$author$$endif$$sep$ \\[1em] $endfor$}
 $endif$
 
+$if(institute)$
+\providecommand{\institute}[1]{}
+\institute{$for(institute)$$institute$$sep$ \and $endfor$}
+$endif$
 $if(date)$
 \date{$date$}
 $else$
 \date{\today}
 $endif$
 
+$if(beamer)$
+$if(titlegraphic)$
+\titlegraphic{\includegraphics{$titlegraphic$}}
+$endif$
+$if(logo)$
+\logo{\includegraphics{$logo$}}
+$endif$
+$endif$
+
 \begin{document}
 $if(title)$
+$if(beamer)$
+\frame{\titlepage}
+$else$
 $if(titlepage)$
 \begin{titlingpage}
 $endif$
 \maketitle
+$endif$
 $endif$
 $if(long-abstract)$
 \begin{abstract}
@@ -468,6 +567,11 @@ $latex-body-start-code$
 
 $endfor$
 $if(toc)$
+$if(beamer)$
+\begin{frame}
+\tableofcontents[hideallsubsections]
+\end{frame}
+$else$
 {
 $if(colorlinks)$
 \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$black$endif$}
@@ -475,6 +579,7 @@ $endif$
 \setcounter{tocdepth}{$toc-depth$}
 \tableofcontents
 }
+$endif$
 $endif$
 $if(lot)$
 \listoftables
@@ -507,7 +612,14 @@ $else$
 \renewcommand\refname{$biblio-title$}
 $endif$
 $endif$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+\bibliographytrue
+$endif$
 \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$if(beamer)$
+\end{frame}
+$endif$
 
 $endif$
 $endif$
